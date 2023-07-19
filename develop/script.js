@@ -3,18 +3,44 @@
 // in the html.
 
  today = dayjs(); 
- $('#currentDay').text(today.format('dddd, MMMM D YYYY'));
+ $('#currentDay').text(today.format('dddd, MMMM D YYYY, h:mm:ss'));
 
  $(function(){
+
+var currentHour = dayjs().format('H');
+
+function colorTime() {
+  $('.time-block').each(function(){
+   var timeBlock = parseInt(this.id);
+   $(this).toggleClass('past', timeBlock < currentHour);
+   $(this).toggleClass('present', timeBlock === currentHour);
+   $(this).toggleClass('future', timeBlock > currentHour);
+  });
+}
 
 function textEntry() {
   $('.saveBtn').on('click', function(){
     var key = $(this).parent().attr('id');
     var value = $(this).siblings('.description').val();
     localStorage.setItem(key, value);
-    console.log((key))
   });
 }
+
+function colorChange() {
+   $('.time-block').each(function(){
+    var hourBlock = parseInt(this.id);
+    console.log(hourBlock)
+    console.log(currentHour)
+    if (hourBlock == currentHour) {
+      $(this).removeClass('past future').addClass('present');
+    } else if (hourBlock < currentHour) {
+      $(this).removeClass('present future').addClass('past');
+    } else {  
+      $(this).removeClass('past present').addClass('future');
+    }  
+   });
+}
+
 
 $('.time-block').each(function(){
   var key = $(this).attr('id');
@@ -22,8 +48,9 @@ $('.time-block').each(function(){
   $(this).children('.description').val(value);
 });
 
-
+colorTime();
 textEntry();
+colorChange();
 });
 
   // TODO: Add a listener for click events on the save button. This code should
@@ -43,5 +70,5 @@ textEntry();
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
   //
-  // TODO: Add code to display the current date in the header of the page.
+  // TODO: Add code to display the current date in the header of the page. DONNE
 
